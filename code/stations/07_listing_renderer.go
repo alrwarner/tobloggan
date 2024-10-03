@@ -2,12 +2,14 @@ package stations
 
 import (
 	"sort"
+	"strings"
 
 	"tobloggan/code/contracts"
 )
 
 type ListingRenderer struct {
 	articleListing []contracts.Article
+	template       string
 }
 
 func (this *ListingRenderer) Do(input any, output func(any)) {
@@ -29,5 +31,17 @@ func (this *ListingRenderer) Finalize(output func(any)) {
 	sort.Slice(this.articleListing, func(i, j int) bool {
 		return this.articleListing[i].Date.Before(this.articleListing[j].Date)
 	})
-	output(this.articleListing)
+
+	var sb strings.Builder
+	for i, listing := range this.articleListing {
+		if i != 0 {
+			sb.WriteString("\n")
+		}
+		sb.WriteString("<li>")
+		sb.WriteString(listing.Title)
+		sb.WriteString("<\\li>")
+	}
+	pageContent := strings.Replace(this.template, "{{Listing}}", sb.String(), 1)
+
+	output(contracts.Page{Path: "/", Content: pageContent})
 }

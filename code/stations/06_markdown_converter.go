@@ -1,11 +1,30 @@
 package stations
 
+import (
+	"errors"
+
+	"tobloggan/code/contracts"
+	"tobloggan/code/markdown"
+)
+
 type Markdown interface {
 	Convert(content string) (string, error)
 }
 
-//type MarkdownConverter struct{}
+type MarkdownConverter struct{}
 
-//func (this *MarkdownConverter) Do(input any, output func(any)) {
-//    TODO: given a contracts.Article, use the provided Markdown interface to convert and re-assign the Body field.
-//}
+func (this MarkdownConverter) Do(input any, output func(any)) {
+	var err error
+	converter := markdown.NewConverter()
+	switch input := input.(type) {
+	case contracts.Article:
+		input.Body, err = converter.Convert(input.Body)
+		if err != nil {
+			output(errors.New("problem converting article to markdown: " + err.Error()))
+		} else {
+			output(input)
+		}
+	default:
+		output(input)
+	}
+}

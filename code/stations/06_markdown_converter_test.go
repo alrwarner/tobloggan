@@ -15,13 +15,7 @@ func TestMarkdownConverterFixture(t *testing.T) {
 }
 
 type MarkdownConverterFixture struct {
-	*gunit.Fixture
-	station contracts.Station
-	outputs []any
-}
-
-func (this *MarkdownConverterFixture) output(v any) {
-	this.outputs = append(this.outputs, v)
+	StationFixture
 }
 
 func (this *MarkdownConverterFixture) Setup() {

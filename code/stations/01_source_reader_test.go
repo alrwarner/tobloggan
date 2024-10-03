@@ -1,4 +1,10 @@
 package stations
 
-//func (this *SourceReaderFixture) TestSourceFileContentReadFromDiskAndEmitted() {}
+import {
+
+}
+
+func (this *SourceReaderFixture) TestSourceFileContentReadFromDiskAndEmitted() {
+	
+}
 //func (this *SourceReaderFixture) TestIOError() {}

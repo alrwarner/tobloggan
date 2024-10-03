@@ -35,11 +35,11 @@ func (this *ArticleValidator) Do(input any, output func(any)) {
 			output(errMalformedContent)
 		}
 
-		this.unique.Add(input.Slug)
-
 		if this.unique.Contains(input.Slug) {
 			output(errDuplicateSlug)
 		}
+
+		this.unique.Add(input.Slug)
 
 		// Output article, there were no problems
 		output(input)

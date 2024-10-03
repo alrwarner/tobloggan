@@ -37,6 +37,6 @@ func (this *SourceReader) readFile(filename contracts.SourceFilePath, output fun
 	if err != nil {
 		output(err)
 	} else {
-		output(contents)
+		output(contracts.SourceFile(contents))
 	}
 }

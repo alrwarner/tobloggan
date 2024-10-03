@@ -1,7 +1,6 @@
 package stations
 
 import (
-	"os"
 	"path/filepath"
 
 	"tobloggan/code/contracts"
@@ -9,26 +8,31 @@ import (
 
 type PageWriter struct {
 	targetDirectory string
-	fileWriter      contracts.FSWriter
+	fs              contracts.FSWriter
 }
 
-func NewPageWriter(directory string, writer contracts.FSWriter) *PageWriter {
-	return &PageWriter{targetDirectory: directory, fileWriter: writer}
+func NewPageWriter(targetDirectory string, fs contracts.FSWriter) contracts.Station {
+	return &PageWriter{
+		targetDirectory: targetDirectory,
+		fs:              fs,
+	}
 }
-
 func (this *PageWriter) Do(input any, output func(any)) {
-	//    TODO: given a contracts.Page, create a directory at contracts.Page.Path then
-	//    write contracts.Page.Content to filepath.Join(this.targetDirectory, input.Path, "index.html")
-
 	switch input := input.(type) {
 	case contracts.Page:
-
-		fPath := filepath.Join(this.targetDirectory, input.Path, "index.html")
-
-		this.fileWriter.WriteFile(fPath, []byte(input.Content), os.ModePerm)
-
+		path := filepath.Join(this.targetDirectory, input.Path, "index.html")
+		err := this.fs.MkdirAll(filepath.Dir(path), 0755)
+		if err != nil {
+			output(contracts.Error(err))
+			return
+		}
+		err = this.fs.WriteFile(path, []byte(input.Content), 0644)
+		if err != nil {
+			output(contracts.Error(err))
+			return
+		}
+		output(input)
 	default:
 		output(input)
 	}
-
 }

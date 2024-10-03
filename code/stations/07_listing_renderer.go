@@ -37,7 +37,7 @@ func (this *ListingRenderer) Finalize(output func(any)) {
 	//    TODO: output(contracts.Page{Path: "/", Content: pageContent})
 
 	sort.Slice(this.articleListing, func(i, j int) bool {
-		return this.articleListing[i].Date.Before(this.articleListing[j].Date)
+		return this.articleListing[i].Date.After(this.articleListing[j].Date)
 	})
 
 	var sb strings.Builder

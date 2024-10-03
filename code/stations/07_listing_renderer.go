@@ -1,6 +1,7 @@
 package stations
 
 import (
+	"fmt"
 	"sort"
 	"strings"
 
@@ -44,9 +45,11 @@ func (this *ListingRenderer) Finalize(output func(any)) {
 		if i != 0 {
 			sb.WriteString("\n")
 		}
-		sb.WriteString("<li>")
-		sb.WriteString(listing.Title)
-		sb.WriteString("<\\li>")
+
+		sb.WriteString(`<li>`)
+		// <a href=SLUG>TITLE<a>
+		sb.WriteString(fmt.Sprintf(`<a href="%s">%s<\a>`, listing.Slug, listing.Title))
+		sb.WriteString(`<\li>`)
 	}
 	pageContent := strings.Replace(this.template, "{{Listing}}", sb.String(), 1)
 

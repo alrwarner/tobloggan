@@ -11,7 +11,13 @@ type Markdown interface {
 	Convert(content string) (string, error)
 }
 
-type MarkdownConverter struct{}
+type MarkdownConverter struct {
+	converter Markdown
+}
+
+func NewMarkdownConverter(converter Markdown) *MarkdownConverter {
+	return &MarkdownConverter{converter: converter}
+}
 
 func (this MarkdownConverter) Do(input any, output func(any)) {
 	var err error

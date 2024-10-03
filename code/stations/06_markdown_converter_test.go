@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"tobloggan/code/contracts"
+	"tobloggan/code/markdown"
 
 	"github.com/smarty/assertions/should"
 	"github.com/smarty/gunit"
@@ -19,7 +20,7 @@ type MarkdownConverterFixture struct {
 }
 
 func (this *MarkdownConverterFixture) Setup() {
-	this.station = MarkdownConverter{}
+	this.station = NewMarkdownConverter(markdown.NewConverter())
 }
 
 func (this *MarkdownConverterFixture) TestConverter() {

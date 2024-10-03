@@ -11,7 +11,7 @@ type SourceScanner struct {
 	filesystem fs.FS
 }
 
-func NewSourceScanner(filesystem fs.FS) contracts.Station {
+func NewSourceScanner(filesystem fs.FS) *SourceScanner {
 	return &SourceScanner{filesystem: filesystem}
 }
 

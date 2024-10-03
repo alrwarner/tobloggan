@@ -12,6 +12,13 @@ type ListingRenderer struct {
 	template       string
 }
 
+func NewListingRenderer(listingTemplate string) *ListingRenderer {
+	return &ListingRenderer{
+		articleListing: make([]contracts.Article, 0),
+		template:       listingTemplate,
+	}
+}
+
 func (this *ListingRenderer) Do(input any, output func(any)) {
 	//    TODO: given a contracts.Article, append it to a slice and send it on
 	switch input := input.(type) {

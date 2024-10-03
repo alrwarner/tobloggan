@@ -10,6 +10,10 @@ type ArticleRenderer struct {
 	template string
 }
 
+func NewArticleRenderer(articleTemplate string) *ArticleRenderer {
+	return &ArticleRenderer{template: articleTemplate}
+}
+
 func (this *ArticleRenderer) Do(input any, output func(any)) {
 	//    TODO: combine the fields of the incoming contracts.Article with the article template (provided via the constructor),
 	//    replace: {{Title}} with contracts.Article.Title

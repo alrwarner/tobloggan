@@ -1,7 +1,6 @@
 package stations
 
 import (
-	"bufio"
 	"os"
 	"path/filepath"
 
@@ -10,6 +9,11 @@ import (
 
 type PageWriter struct {
 	targetDirectory string
+	fileWriter      contracts.FSWriter
+}
+
+func NewPageWriter(directory string, writer contracts.FSWriter) *PageWriter {
+	return &PageWriter{targetDirectory: directory, fileWriter: writer}
 }
 
 func (this *PageWriter) Do(input any, output func(any)) {
@@ -18,14 +22,11 @@ func (this *PageWriter) Do(input any, output func(any)) {
 
 	switch input := input.(type) {
 	case contracts.Page:
+
 		fPath := filepath.Join(this.targetDirectory, input.Path, "index.html")
-		os.MkdirAll(fPath, os.ModePerm)
-		outputFile, _ := os.Create(fPath)
-		writer := bufio.NewWriter(outputFile)
-		writer.WriteString(input.Content)
-		writer.Flush()
-		outputFile.Close()
-		output(input)
+
+		this.fileWriter.WriteFile(fPath, []byte(input.Content), os.ModePerm)
+
 	default:
 		output(input)
 	}

@@ -1,16 +1,25 @@
 package stations
 
 import (
+	"errors"
+
 	"tobloggan/code/contracts"
+	"tobloggan/code/set"
 )
 
-type ArticleValidator struct{}
+//    TODO: given a contracts.Article, validate the Slug and the Title fields and emit the contracts.Article (or an error)
+//    input: contracts.Article
+//    output: contracts.Article (or error)
+
+type ArticleValidator struct {
+	unique set.Set[string]
+}
+
+func NewArticleValidator() contracts.Station {
+	return &ArticleValidator{unique: set.New[string]()}
+}
 
 func (this *ArticleValidator) Do(input any, output func(any)) {
-	//    TODO: given a contracts.Article, validate the Slug and the Title fields and emit the contracts.Article (or an error)
-	//    input: contracts.Article
-	//    output: contracts.Article (or error)
-
 	switch input := input.(type) {
 	case contracts.Article:
 
@@ -26,7 +35,11 @@ func (this *ArticleValidator) Do(input any, output func(any)) {
 			output(errMalformedContent)
 		}
 
-		// TODO: Check date range
+		this.unique.Add(input.Slug)
+
+		if this.unique.Contains(input.Slug) {
+			output(errDuplicateSlug)
+		}
 
 		// Output article, there were no problems
 		output(input)
@@ -52,4 +65,7 @@ func isValidSlug(slug string, validSlugCharacters map[rune]struct{}) bool {
 	return true
 }
 
-var validSlugCharacters = newRuneSet("abcdefghijklmnopqrstuvwxyz0123456789-/")
+var (
+	validSlugCharacters = newRuneSet("abcdefghijklmnopqrstuvwxyz0123456789-/")
+	errDuplicateSlug    = errors.New("duplicate slug")
+)
